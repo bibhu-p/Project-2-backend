@@ -30,7 +30,15 @@ const userSchema = new mongoose.Schema({
     slot :{
 		type: mongoose.Schema.Types.ObjectId,
 		ref: "vaccineSlots"
-	}
+	},
+    userType: {
+        type: String,
+        enum: {
+          values: ["user", "admin"],
+          message: "{VALUE} is not supported",
+        },
+        default: "user",
+      },
 });
 
 const User = mongoose.model('users', userSchema);
