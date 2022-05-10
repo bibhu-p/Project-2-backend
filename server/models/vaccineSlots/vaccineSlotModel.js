@@ -3,10 +3,8 @@ const mongoose = require('mongoose');
 const vaccineSlotSchema = new mongoose.Schema({
     date : {
         type: String,
-        required:true,
-        unique:true
     },
-    users:[{
+    user:[{
         type: mongoose.Schema.Types.ObjectId,
 		ref: "users"
     }]

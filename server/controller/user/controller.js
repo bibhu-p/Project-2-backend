@@ -84,7 +84,20 @@ const UsersController = {
             }).catch(err =>{
                return res.status(500).json({success:false, message:err.message || "Error During Searching.."});
             });
-    }
+    },
+    findById: async (req, res) => {
+        if (!req.params.id) {
+            return res.status(404).send({ message: "Provide ID!! " });
+        }
+        else {
+            const id = req.params.id;
+            UsersCollection.findById(id).then(user => {
+                    return res.status(200).json({success : true, message:'User Info',data:user});
+                }).catch(err =>{
+                    return res.status(500).json({success:false, message: err.message || 'Something Went Wrong.!' });
+            });
+        }
+    },
 
 }
 
