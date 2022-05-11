@@ -3,7 +3,9 @@ const route = express.Router()
 
 const VaccineController = require('../controller/vaccineSlot/controller')
 
-route.post('/create',VaccineController.addSlots);
-route.get('/find/:date',VaccineController.find);
+route.post('/create',VaccineController.create);
+route.get('/find/:id',VaccineController.find);
+route.put('/book/:id',VaccineController.update);
+route.get('/search/:userId',VaccineController.findUserSlot)
 
 module.exports = route

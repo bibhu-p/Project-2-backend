@@ -7,5 +7,6 @@ route.post('/register',UsersController.register);
 route.post('/login',UsersController.login);
 route.get('/find',UsersController.find);
 route.get('/:id',UsersController.findById);
+route.put('/update/:id',UsersController.update);
 
 module.exports = route
