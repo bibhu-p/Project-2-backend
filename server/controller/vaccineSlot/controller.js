@@ -20,23 +20,31 @@ const VaccineController = {
     },
     find: async (req, res) => {
         try{
-            const slotData = await VaccineSlotsCollection.find({ date: req.params.id });
-            if(slotData.length > 0){
-                return res.status(200).json({ success: true, message: "All slot Data", data: slotData[0] });
-            }
-            else{
-                return res.status(204).json({ success: false, message:"No Data Found.!", data: null });
-            }
+            await VaccineSlotsCollection.find({ date: req.params.id }).populate({path:'user.userId',select:['name','email','age','phone'],}).
+            exec((err,result)=>{
+                if(err){
+                    return res.status(204).json({ success: false, message:err, data: null });
+                }else{
+                    return res.status(200).json({ success: true, message: "All slot Data", data: result });
+                }
+            })
+            // if(slotData.length > 0){
+            //     return res.status(200).json({ success: true, message: "All slot Data", data: slotData[0] });
+            // }
+            // else{
+            //     return res.status(204).json({ success: false, message:"No Data Found.!", data: null });
+            // }
         }catch (err) {
             return res.status(500).json({ success: false, message: err });
         }
         
     },
+    
     update :async (req, res)=>{
         const body = req.body.user;
         const date = req.params.id;
         const limit = 5;
-        if (!body && !id) {
+        if (!body && !date) {
             return res.status(400).json({ success: false, message: "Update data can't be empty..." });
         }
         try {
@@ -59,13 +67,25 @@ const VaccineController = {
         }
     },
     findUserSlot :async (req,res)=>{
-        const userId = req.params.userId;
-        const singleSlot = await VaccineSlotsCollection.find({user:userId})
+        const id = req.params.userId;
+        const singleSlot = await VaccineSlotsCollection.find({"user.userId":id})
+        // console.log(singleSlot);
         if(singleSlot.length > 0){
             return res.status(200).json({success:true, message:'User has been booked.',data:singleSlot[0]})
         }
         return res.status(204).json({ success: false, message:"User is not booked any slot." });
         
+    },
+    updateStatus:async (req,res)=>{
+        const id = req.params.id
+        const singleSlot = await VaccineSlotsCollection.find({"user.userId":id})
+        // console.log(singleSlot[0]);
+        const update = await VaccineSlotsCollection.updateOne(
+            { _id: singleSlot[0]._id, "user.userId": id },
+            { $set: { "user.$.status" : req.body.status } })
+        if (update) {
+            return res.status(200).json({ success: true, message: "Data updated", });
+        }
     }
 }
 

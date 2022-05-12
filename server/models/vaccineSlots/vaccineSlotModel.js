@@ -5,8 +5,14 @@ const vaccineSlotSchema = new mongoose.Schema({
         type: String,
     },
     user:[{
-        type: mongoose.Schema.Types.ObjectId,
-		ref: "users"
+        userId:{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "users"
+        },
+        status:{
+            type : Boolean,
+            default: true
+        }
     }]
 });
 
